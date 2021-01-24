@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: azyza
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./init.sql:/data/application/init.sql
+    ports:
+      - "5432:5432"
