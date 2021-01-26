@@ -7,7 +7,7 @@ export default class PaintingModel extends Model {
   title: string = ''
   description: string = ''
   sold: boolean = false
-  painted_year: number = null
+  price_rub: number = null
   db_connector = PaintingModelDefiner()
 
   constructor () {
@@ -19,7 +19,7 @@ export default class PaintingModel extends Model {
     model.title = obj.title || ''
     model.description = obj.description || ''
     model.sold = obj.sold || false
-    model.painted_year = obj.painted_year || null
+    model.price_rub = obj.price_rub || null
 
     return model
   }
@@ -42,7 +42,7 @@ export const PaintingModelDefiner = () => {
       sold: {
         type: DataTypes.BOOLEAN
       },
-      painted_year: {
+      price_rub: {
         type: DataTypes.INTEGER
       },
     }, {
