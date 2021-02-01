@@ -1,11 +1,20 @@
 import { Request, Response, NextFunction } from 'express'
 import createError from 'http-errors'
-// import { OutgoingHttpHeaders } from 'http'
+import { OutgoingHttpHeaders } from 'http'
 
-export async function apiHandle (req: Request, res: Response, operation: any, next: NextFunction) {
+import { getHeadersFromBuffer } from './FileSystemHandler'
+
+export async function apiHandle (req: Request, res: Response, operation: any, next: NextFunction, resolveHeaders: boolean = false) {
   try {
     const operationResult: any = await operation() || 'OK'
-    res.status(200).send(operationResult)
+    if (resolveHeaders) {
+      const headers : OutgoingHttpHeaders = await getHeadersFromBuffer(operationResult)
+      res.writeHead(200, headers)
+      res.end(operationResult)
+    } else {
+      res.status(200)
+      res.send(operationResult)
+    }
   } catch (e) {
     let status: number = 500
     switch (e.name) {

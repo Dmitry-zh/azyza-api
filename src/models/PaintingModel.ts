@@ -1,13 +1,15 @@
 import { db } from '../core/db/dbConnector'
 import { DataTypes } from 'sequelize'
-import Model from './Model'
+import GalleryObjectModel from './GalleryObjectModel'
 
-export default class PaintingModel extends Model {
+export default class PaintingModel extends GalleryObjectModel {
   id: number = null
   title: string = ''
   description: string = ''
   sold: boolean = false
   price_rub: number = null
+  img_id: string = ''
+  minimal_img_id: string = ''
   db_connector = PaintingModelDefiner()
 
   constructor () {
@@ -20,6 +22,8 @@ export default class PaintingModel extends Model {
     model.description = obj.description || ''
     model.sold = obj.sold || false
     model.price_rub = obj.price_rub || null
+    model.img_id = obj.img_id || ''
+    model.minimal_img_id = obj.minimal_img_id || ''
 
     return model
   }
@@ -45,6 +49,12 @@ export const PaintingModelDefiner = () => {
       price_rub: {
         type: DataTypes.INTEGER
       },
+      img_id: {
+        type: DataTypes.TEXT
+      },
+      minimal_img_id: {
+        type: DataTypes.TEXT
+      }
     }, {
       timestamps: true
     })
