@@ -9,15 +9,27 @@ export default abstract class Repository<T extends IModel<T> & Model> {
     this.model = model
   }
 
+  getEntity(id: number): Promise<T> {
+    return this.model.db_connector.findOne({where: {id}})
+  }
+
   getList(queryParams: QueryParams): Promise<T> {
     const { offset, limit } = queryParams
+
     return this.model.db_connector.findAndCountAll({offset, limit})
   }
 
   create(model: Model): Promise<T> {
     return this.model.db_connector.create(model)
   }
-}
+
+  update(model: Model): Promise<T> {
+    return this.model.db_connector.update(model, {
+      where: {
+        id: model.id
+      }
+    }).then(() => model)
+  }}
 
 // import { ProductModel, ProductDefiner } from '../models/ProductModel'
 // import { db } from '../core/db/dbConnector'

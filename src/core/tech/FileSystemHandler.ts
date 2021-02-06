@@ -32,6 +32,10 @@ const compressImage = async (imageBuffer:any): Promise<any> => {
   return compressedImageBuffer
 }
 
+export const deleteImages = async (images: string[]): Promise<any> => {
+  return images.forEach((img:string) => fs.unlinkSync(`${imagesDir}/${img}`))
+}
+
 const getFileExtension = (filename: string): string => {
   const fileParts = filename.split('.')
   const extension = fileParts.length === 2 ? fileParts[1] : ''
