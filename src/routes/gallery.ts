@@ -36,4 +36,15 @@ router.post('/:entity', upload.any(),  async (req: MulterRequest, res: Response,
   }, next)
 })
 
+router.put('/:entity', upload.any(),  async (req: MulterRequest, res: Response, next: NextFunction) => {
+  const entity = req.params.entity
+  const entityService = services.getGalleryService(entity)
+  const model: GalleryObjectModel = entityService.repository.model.fromObject(req.body)
+  const image = req.files?.length && req.files[0]
+
+  apiHandle(req, res, async () => {
+    return image ? await entityService.updateImageAndModel(model, image) : await entityService.update(model)
+  }, next)
+})
+
 export default router
