@@ -13,10 +13,9 @@ export default abstract class Service<T extends IModel<T> & Model, T1 extends Re
     this.entity = entity
     this.repository = repository
   }
-  getEntity (id:number) {
-    return this.repository.getEntity(id)
+  get (id: number) {
+    return this.repository.get(id)
   }
-
   getList (queryParams: QueryParams) {
     return this.repository.getList(queryParams)
   }
@@ -26,7 +25,17 @@ export default abstract class Service<T extends IModel<T> & Model, T1 extends Re
   update (model: Model) {
     return this.repository.update(model)
   }
+  delete (id: number) {
+    return this.repository.delete(id)
+  }
   // gallery only
+  deleteImagesAndEntity(id: number) {
+    return this.delete(id).then(async (model) => {
+      await deleteImages([model.img_id, model.minimal_img_id])
+
+      return model
+    })
+  }
   uploadImageAndCreate(model: GalleryObjectModel, image: any) {
     if (!image) {
       return this.create(model)
@@ -46,7 +55,7 @@ export default abstract class Service<T extends IModel<T> & Model, T1 extends Re
         const {imgFilename, minimalImgFilename} = imgNames
         model.img_id = imgFilename
         model.minimal_img_id = minimalImgFilename
-        const oldModel = await this.getEntity(model?.id)
+        const oldModel = await this.get(model?.id)
         oldImageNames = [oldModel.img_id, oldModel.minimal_img_id]
 
         return this.update(model)

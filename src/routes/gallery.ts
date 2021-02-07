@@ -15,6 +15,16 @@ interface MulterRequest extends Request {
   files: any;
 }
 
+router.get('/:entity/:id', async (req: Request, res: Response, next: NextFunction) => {
+  const entity = req.params.entity
+  const id = req.params.id
+  const entityService = services.getGalleryService(entity)
+
+  apiHandle(req, res, async () => {
+    return await entityService.get(Number(id))
+  }, next)
+})
+
 router.get('/:entity', async (req: Request, res: Response, next: NextFunction) => {
   const entity = req.params.entity
   const queryParams = new QueryParams(req.query)
@@ -44,6 +54,16 @@ router.put('/:entity', upload.any(),  async (req: MulterRequest, res: Response, 
 
   apiHandle(req, res, async () => {
     return image ? await entityService.updateImageAndModel(model, image) : await entityService.update(model)
+  }, next)
+})
+
+router.delete('/:entity/:id', async (req: Request, res: Response, next: NextFunction) => {
+  const entity = req.params.entity
+  const id = req.params.id
+  const entityService = services.getGalleryService(entity)
+
+  apiHandle(req, res, async () => {
+    return await entityService.deleteImagesAndEntity(Number(id))
   }, next)
 })
 

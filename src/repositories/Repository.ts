@@ -9,7 +9,7 @@ export default abstract class Repository<T extends IModel<T> & Model> {
     this.model = model
   }
 
-  getEntity(id: number): Promise<T> {
+  get(id: number): Promise<T> {
     return this.model.db_connector.findOne({where: {id}})
   }
 
@@ -29,23 +29,14 @@ export default abstract class Repository<T extends IModel<T> & Model> {
         id: model.id
       }
     }).then(() => model)
-  }}
+  }
 
-// import { ProductModel, ProductDefiner } from '../models/ProductModel'
-// import { db } from '../core/db/dbConnector'
-// import { QueryTypes } from 'sequelize'
-//
-// const productSchema = ProductDefiner()
-//
-// export default class ProductMapPointService {
-//
-//   create = async (product: any) => {
-//     const productModel = new ProductModel( product )
-//     let newProduct:any
-//     try {
-//       newProduct = await productSchema.create(productModel)
-//     } catch (e) {
-//       throw new Error(e.message)
-//     }
-//     return newProduct
-//   }
+  delete(id: number): Promise<T> {
+    return this.get(id).then(async model => {
+      await this.model.db_connector.destroy({where: {id}})
+
+      return model
+    })
+  }
+}
+
